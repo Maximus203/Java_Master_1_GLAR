@@ -11,13 +11,13 @@ public class Application {
 		int choix = 0;
 		String numero,ip,nomserv,nom,prenom;
 		int matr,port;
-		Administrateur adm= null;
+		Administrateur adm, admin = null;
 		do {
 			System.out.println("1. Ajouter un administrateur");
 			System.out.println("2. Lister les administrateurs");
 			System.out.println("3. Ajouter un serveur");
 			System.out.println("4. Lister les seveurs");
-			System.out.println("5. Lister les serveurs");
+			System.out.println("5. Lister les serveurs et leurs administrateurs");
 			System.out.println("6. Sortie");
 			System.out.println("Faite votre choix");
 			choix = sc.nextInt();
@@ -33,7 +33,8 @@ public class Application {
 					nom = sc.nextLine();
 					System.out.println("Prenom ?");
 					prenom = sc.nextLine();
-					Administrateur admin = new Administrateur(matr, prenom, nom);
+					admin = new Administrateur(matr, prenom, nom);
+					listeadmin.add(admin);
 					break;
 				case 2:
 					for (Administrateur x : listeadmin)
@@ -41,45 +42,56 @@ public class Application {
 						System.out.println("_______________________________");
 						System.out.println("Matricule: "+x.getMatr());
 						System.out.println("Nom : "+x.getNom());
-						System.out.println("Prenom"+x.getPrenom());
+						System.out.println("Prenom: "+x.getPrenom());
 					}
 					System.out.println("_______________________________");
 					break;
 				case 3:
-					System.out.println("Ce serveur est t-il gere ? (O/N)");
+					System.out.println("Numero de l'administrateur");
+					numero = sc.nextLine();
+					System.out.println("Nom du serveur");
+					nomserv = sc.nextLine();
+					System.out.println("IP du serveur");
+					ip = sc.nextLine();
+					System.out.println("Port du serveur");
+					port = sc.nextInt();
+					sc.nextLine();
+					
+					System.out.println("Ce serveur est-il gere ? (O/N)");
 					String reponse = sc.nextLine();
+					reponse = reponse.toUpperCase();
 					if( reponse.equals("N"))
 					{
-						adm = null;
+						admin = null;
+						Serveur s1 = new Serveur(numero, nomserv, ip, port,admin);
+						listeserv.add(s1);
 					}
 					else
 					{
 						System.out.println("Numero de l'administrateur ?");
 						int num = sc.nextInt();
 						sc.nextLine();
-						for(Administrateur y:listeadmin)
+						adm = null;
+						for (Administrateur y: listeadmin)
 						{
-							if(y.getMatr()==num)
+							if( y.getMatr() == num )
 							{
 								adm = y;
 								break;
 							}
 						}
-						if( adm == null )
-							System.out.println("Numero de l'administrateur");
+						
+						if(adm ==null)
+						{
+							System.out.println("Numero de l'administrateur inexistant");
+						}
 						else
 						{
-							System.out.println("Numero de l'administrateur");
-							numero = sc.nextLine();
-							System.out.println("Nom du serveur");
-							nomserv = sc.nextLine();
-							System.out.println("IP du serveur");
-							ip = sc.nextLine();
-							System.out.println("Port du serveur");
-							port = sc.nextInt();
-							sc.nextLine();
-							Serveur sv= new Serveur(numero, nomserv, ip, port, admin);
+							Serveur sv= new Serveur(numero, nomserv, ip, port, adm);
+							listeserv.add(sv);
+		
 						}
+
 					}
 					break;
 				case 4:
